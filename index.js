@@ -9,4 +9,7 @@
  * @license Apache-2.0
  */
 
-require('./src/node-quickstart.js');
+angular.module('robustAuth',[])
+  .service('authProvider', ['config', '$http', require('./src/token-auth-provider')])
+  .service('authSvc', ['config', 'authProvider', 'storage', 'logger', require('./src/auth-svc.js')])
+;

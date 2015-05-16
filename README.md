@@ -12,7 +12,7 @@ A short description of the motivation behind the creation and maintenance of the
 
 ## Installation
 
-Provide code examples and explanations of how to get the project.
+
 
 ## API Reference
 
@@ -20,7 +20,19 @@ Depending on the size of the project, if it is small and simple enough the refer
 
 ## Tests
 
-Describe and show how to run the tests with code examples.
+1. sudo npm install protractor -g
+2. sudo webdriver-manager update
+3. webdriver-manager start
+4. protractor test/protractor.conf.js
+
+### Debugging Tests:
+
+1. /usr/local/lib/node_modules/protractor/bin/elementexplorer.js http://angularjs.org
+2. Press 'tab'  to play with element locators
+
+### e2e Test Guidance:
+1. use "Page Objects" which are objects that represent each webpage in your app.
+2.
 
 ## Contributors
 

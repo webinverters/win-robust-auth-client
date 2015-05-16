@@ -16,6 +16,9 @@ coverage:
 viewCov:
 	open coverage/lcov-report/index.html
 
+build: index.js
+	browserify index.js -o dist/robust-auth.js
+
 all: unit int
 
 .PHONY: unit int coverage viewCov all
