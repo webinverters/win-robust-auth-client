@@ -70,18 +70,24 @@ module.exports = function construct(config, authDriver, storage, logger) {
       var user = storage.get('user-'+userId);
       if (user) {
         currentUser = user;
+      } else {
+        logger.log('User does not exist.');
       }
     } else {
       return currentUser;
     }
   };
 
-  m.refreshAuth = function(userId) {
+  m.reauthenticate = function(userId) {
     var user = storage.get('user-'+userId);
     if (user) {
       return authDriver.reauthenticate(user)
         .then(function(user) {
           return setCurrentUser(user);
+        })
+        .catch(function(err) {
+          logger.logError('Error Reauthenticating: ', err);
+          return setCurrentUser(null);
         });
     }
   };
