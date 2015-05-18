@@ -31,6 +31,7 @@ module.exports = function construct(config, authDriver, storage, logger) {
     }
     return currentUser;
   };
+
   /**
    * Returns not-null if login was successful.  Otherwise, it returns the object received in response
    * to calling the login endpoint.
