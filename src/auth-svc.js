@@ -93,7 +93,7 @@ module.exports = function construct(config, authDriver, storage, logger) {
       if (new Date().getTime() - user.lastLoginTimestamp < 1000*60*60*12) {
         currentUser = user;
         storage.set('current-user', currentUser);
-        return currentUser;
+        return p.resolve(currentUser);
       } else {
         return authDriver.reauthenticate(user)
           .then(function(user) {
