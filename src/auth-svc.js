@@ -57,8 +57,8 @@ module.exports = function construct(config, authDriver, storage, logger) {
   m.logout = function() {
     return authDriver.logout()
       .then(function() {
-        storage.delete('user-'+currentUser.id);
-        storage.delete('current-user');
+        storage.remove('user-'+currentUser.id);
+        storage.remove('current-user');
         logger.log('$logout', currentUser.id);
         currentUser = null;
       })
