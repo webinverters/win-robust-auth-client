@@ -106,6 +106,7 @@ module.exports = function construct(config, authDriver, storage, logger) {
           });
       }
     }
+    return p.resolve(null);
   };
 
   return m;
