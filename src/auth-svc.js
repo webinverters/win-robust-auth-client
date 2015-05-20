@@ -88,22 +88,23 @@ module.exports = function construct(config, authDriver, storage, logger) {
       user = storage.get('user-'+userId);
     }
 
-    // if the user has logged in within a half-day, keep the same credentials.
-    if (new Date().getTime() - user.lastLoginTimestamp < 1000*60*60*12) {
-      currentUser = user;
-      storage.set('current-user', currentUser);
-    }
-
     if (user) {
-      return authDriver.reauthenticate(user)
-        .then(function(user) {
-          return setCurrentUser(user);
-        })
-        .catch(function(err) {
-          // TODO: potentially broadcast a $logout event?
-          logger.logError('Error Reauthenticating: ', err);
-          return setCurrentUser(null);
-        });
+      // if the user has logged in within a half-day, keep the same credentials.
+      if (new Date().getTime() - user.lastLoginTimestamp < 1000*60*60*12) {
+        currentUser = user;
+        storage.set('current-user', currentUser);
+        return currentUser;
+      } else {
+        return authDriver.reauthenticate(user)
+          .then(function(user) {
+            return setCurrentUser(user);
+          })
+          .catch(function(err) {
+            // TODO: potentially broadcast a $logout event?
+            logger.logError('Error Reauthenticating: ', err);
+            return setCurrentUser(null);
+          });
+      }
     }
   };
 
