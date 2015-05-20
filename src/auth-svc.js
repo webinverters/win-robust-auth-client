@@ -23,9 +23,11 @@ module.exports = function construct(config, authDriver, storage, logger) {
 
   var setCurrentUser = function(user) {
     currentUser = user;
+    currentUser.lastLoginTimestamp = new Date().getTime();
     if (user) {
       logger.log('$login', currentUser.id);
       storage.set('user-'+currentUser.id, currentUser);
+      storage.set('current-user', currentUser);
     } else {
       logger.log('Login Failed.');
     }
@@ -56,6 +58,7 @@ module.exports = function construct(config, authDriver, storage, logger) {
     return authDriver.logout()
       .then(function() {
         storage.delete('user-'+currentUser.id);
+        storage.delete('current-user');
         logger.log('$logout', currentUser.id);
         currentUser = null;
       })
@@ -74,18 +77,30 @@ module.exports = function construct(config, authDriver, storage, logger) {
         logger.log('User does not exist.');
       }
     } else {
-      return currentUser;
+      if (currentUser) return currentUser;
+      return currentUser = storage.get('current-user');
     }
   };
 
   m.reauthenticate = function(userId) {
-    var user = storage.get('user-'+userId);
+    var user = storage.get('current-user');
+    if (userId) {
+      user = storage.get('user-'+userId);
+    }
+
+    // if the user has logged in within a half-day, keep the same credentials.
+    if (new Date().getTime() - user.lastLoginTimestamp < 1000*60*60*12) {
+      currentUser = user;
+      storage.set('current-user', currentUser);
+    }
+
     if (user) {
       return authDriver.reauthenticate(user)
         .then(function(user) {
           return setCurrentUser(user);
         })
         .catch(function(err) {
+          // TODO: potentially broadcast a $logout event?
           logger.logError('Error Reauthenticating: ', err);
           return setCurrentUser(null);
         });

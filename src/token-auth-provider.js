@@ -30,8 +30,14 @@ module.exports = function construct(config, $http) {
     return p.resolve();
   };
 
-  m.reauthenticate = function() {
-    return p.resolve();
+  m.reauthenticate = function(params) {
+    return $http.post('/token', params)
+      .success(function(res) {
+        return p.resolve(res.body);
+      })
+      .error(function(err) {
+        return p.reject(err);
+      });
   };
 
   return m;
