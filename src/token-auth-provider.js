@@ -19,7 +19,8 @@ module.exports = function construct(config, $http) {
   m.login = function(params) {
     return $http.post('/token', params)
       .success(function(res) {
-        return p.resolve(res.body);
+        var user = JSON.parse(res.body);
+        return p.resolve(user);
       })
       .error(function(err) {
         return p.reject(err);
@@ -31,13 +32,7 @@ module.exports = function construct(config, $http) {
   };
 
   m.reauthenticate = function(params) {
-    return $http.post('/token', params)
-      .success(function(res) {
-        return p.resolve(res.body);
-      })
-      .error(function(err) {
-        return p.reject(err);
-      });
+    return m.login(params);
   };
 
   return m;

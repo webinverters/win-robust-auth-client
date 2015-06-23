@@ -102,7 +102,8 @@ module.exports = function construct(config, authDriver, storage, logger) {
           .catch(function(err) {
             // TODO: potentially broadcast a $logout event?
             logger.logError('Error Reauthenticating: ', err);
-            return setCurrentUser(null);
+            setCurrentUser(null);
+            return null;
           });
       }
     }
