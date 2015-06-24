@@ -19,18 +19,22 @@ module.exports = function construct(config, $http) {
   m.login = function(params) {
     return $http.post('/token', params)
       .then(function(res) {
+        if (res.body) {
+          throw 'Failed to login.  Endpoint missing.';
+        }
+
         try {
-          var user = JSON.parse(res.body);
-          console.log('PARSED USER:', user);
-          return p.resolve(user);
+          return p.resolve(res.data);
         }
         catch (ex) {
+          console.log('/token API response:', res);
           throw 'Failed to login.  Endpoint version mismatch.';
         }
       }, function(err) {
         if (err.status == 401) {
           throw 'Failed to login: invalid credentials.';
         }
+        console.error(err);
         throw 'Failed to login.  Connection failure.';
       });
   };
