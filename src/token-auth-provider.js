@@ -28,6 +28,9 @@ module.exports = function construct(config, $http) {
           throw 'Failed to login.  Endpoint version mismatch.';
         }
       }, function(err) {
+        if (err.status == 401) {
+          throw 'Failed to login: invalid credentials.';
+        }
         throw 'Failed to login.  Connection failure.';
       });
   };
