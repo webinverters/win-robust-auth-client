@@ -19,8 +19,13 @@ module.exports = function construct(config, $http) {
   m.login = function(params) {
     return $http.post('/token', params)
       .success(function(res) {
-        var user = JSON.parse(res.body);
-        return p.resolve(user);
+        try {
+          var user = JSON.parse(res.body);
+          return p.resolve(user);
+        }
+        catch (ex) {
+          return p.reject({message: 'Failed to login.', html: res.body});
+        }
       })
       .error(function(err) {
         return p.reject(err);
