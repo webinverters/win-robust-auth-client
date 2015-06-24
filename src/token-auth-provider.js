@@ -18,17 +18,17 @@ module.exports = function construct(config, $http) {
 
   m.login = function(params) {
     return $http.post('/token', params)
-      .success(function(res) {
+      .then(function(res) {
         try {
           var user = JSON.parse(res.body);
+          console.log('PARSED USER:', user);
           return p.resolve(user);
         }
         catch (ex) {
-          return p.reject({message: 'Failed to login.', html: res.body});
+          throw 'Failed to login.  Endpoint version mismatch.';
         }
-      })
-      .error(function(err) {
-        return p.reject(err);
+      }, function(err) {
+        throw 'Failed to login.  Connection failure.';
       });
   };
 
