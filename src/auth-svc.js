@@ -26,9 +26,9 @@ module.exports = function construct(config, authDriver, storage, logger) {
 
     if (user) {
       logger.log('$login', currentUser.id);
+      currentUser.lastLoginTimestamp = new Date().getTime();
       storage.set('user-'+currentUser.id, currentUser);
       storage.set('current-user', currentUser);
-      currentUser.lastLoginTimestamp = new Date().getTime();
     } else {
       storage.set('current-user', null);
       logger.log('Login Failed.');
