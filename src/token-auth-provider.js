@@ -32,6 +32,7 @@ module.exports = function construct(config, $http) {
         }
       }, function(err) {
         if (err.status == 401) {
+          if (err.data.message) throw err.data.message;
           throw 'Failed to login: invalid credentials.';
         }
         console.error(err);
