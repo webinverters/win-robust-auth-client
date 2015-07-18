@@ -51,3 +51,16 @@ gulp.task('generate-docs', function() {
 gulp.task('patch', function() { return inc('patch'); });
 gulp.task('feature', function() { return inc('minor'); });
 gulp.task('release', function() { return inc('major'); });
+
+
+//var browserify = require('browserify');
+var transform = require('vinyl-transform');
+var uglify = require('gulp-uglify');
+var browserify = require('gulp-browserify');
+
+gulp.task('dist', function () {
+  return gulp.src(["./index.js"])
+  .pipe(browserify())
+    .pipe(uglify())
+    .pipe(gulp.dest("./dist"));
+});
