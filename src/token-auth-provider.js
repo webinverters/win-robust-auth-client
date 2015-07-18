@@ -11,7 +11,7 @@
 
 "use strict";
 
-module.exports = function construct(config, $http) {
+module.exports = function construct(config, $http, $q) {
   var m = {};
   config = config ? config : {};
   config = _.defaults(config, {});
@@ -24,7 +24,7 @@ module.exports = function construct(config, $http) {
         }
 
         try {
-          return p.resolve(res.data);
+          return $q.when(res.data);
         }
         catch (ex) {
           console.log('/token API response:', res);
@@ -41,7 +41,7 @@ module.exports = function construct(config, $http) {
   };
 
   m.logout = function() {
-    return p.resolve();
+    return $q.when();
   };
 
   m.reauthenticate = function(params) {

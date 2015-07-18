@@ -14,7 +14,7 @@
 // when an event you want logged in the app monitor appears, broadcast to the monitor queue.
 
 // could the eventPublisher and the logger be the same thing?
-module.exports = function construct(config, authDriver, storage, logger) {
+module.exports = function construct(config, authDriver, storage, logger, $q) {
   var m = {};
   config = config ? config : {};
   config = _.defaults(config, {});
@@ -95,7 +95,7 @@ module.exports = function construct(config, authDriver, storage, logger) {
       if (new Date().getTime() - user.lastLoginTimestamp < 1000*60*60*12) {
         currentUser = user;
         storage.set('current-user', currentUser);
-        return p.resolve(currentUser);
+        return $q.when(currentUser);
       } else {
         return authDriver.reauthenticate(user)
           .then(function(user) {
@@ -109,7 +109,7 @@ module.exports = function construct(config, authDriver, storage, logger) {
           });
       }
     }
-    return p.resolve(null);
+    return $q.when(null);
   };
 
   return m;
