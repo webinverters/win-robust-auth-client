@@ -10,14 +10,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:webinverters/lib-base.git"
+    "url": "https://github.com/webinverters/win.robust-auth-client"
   },
   "author": "Justin Mooser",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/webinverters/lib-base/issues"
+    "url": "https://github.com/webinverters/win.robust-auth-client/issues"
   },
-  "homepage": "https://github.com/webinverters/lib-base",
+  "homepage": "https://github.com/webinverters/win.robust-auth-client",
   "devDependencies": {
     "angular": "^1.3.15",
     "angular-bluebird": "0.0.1",
