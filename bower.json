@@ -15,5 +15,6 @@
   ],
   "dependencies": {
     "angular-bluebird": "~1.0.13"
-  }
+  },
+  "main": "dist/index.js"
 }
