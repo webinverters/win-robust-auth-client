@@ -51,7 +51,7 @@ module.exports = function construct(config, authDriver, storage, $log, $q) {
         return setCurrentUser(user);
       })
       .catch(function(err) {
-        $log.logError('An error occurred attempting to login.', err);
+        $log.error('An error occurred attempting to login.', err);
         throw err;
       });
   };
@@ -65,7 +65,7 @@ module.exports = function construct(config, authDriver, storage, $log, $q) {
         currentUser = null;
       })
       .catch(function(err) {
-        $log.logError(err);
+        $log.error(err);
         throw err;
       })
   };
@@ -94,18 +94,18 @@ module.exports = function construct(config, authDriver, storage, $log, $q) {
       // if the user has logged in within a half-day, keep the same credentials.
       if (new Date().getTime() - user.lastLoginTimestamp < 1000*60*60*12) {
         currentUser = user;
-        storage.set('current-user', currentUser);
-        return $q.when(currentUser);
+        storage.set('current-user', currentUser)
+        return $q.when(currentUser)
       } else {
         return authDriver.reauthenticate(user)
           .then(function(user) {
-            return setCurrentUser(user);
+            return setCurrentUser(user)
           })
           .catch(function(err) {
             // TODO: potentially broadcast a $logout event?
-            $log.logError('Error Reauthenticating: ', err);
-            setCurrentUser(null);
-            return null;
+            $log.error('Error Reauthenticating: ', err)
+            setCurrentUser(null)
+            return null
           });
       }
     }
