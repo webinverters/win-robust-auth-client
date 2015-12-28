@@ -6,6 +6,7 @@ echo "Provide a commit message as the first parameter"
 
 fi
 
+gulp dist
 git commit -am "$1"
 gulp patch
 git push origin master --tags
