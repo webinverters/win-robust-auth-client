@@ -14,7 +14,7 @@
 // when an event you want logged in the app monitor appears, broadcast to the monitor queue.
 
 // could the eventPublisher and the logger be the same thing?
-module.exports = function construct(config, authDriver, storage, logger, $q) {
+module.exports = function construct(config, authDriver, storage, $log, $q) {
   var m = {};
   config = config ? config : {};
   config = _.defaults(config, {});
@@ -25,13 +25,13 @@ module.exports = function construct(config, authDriver, storage, logger, $q) {
     currentUser = user;
 
     if (user) {
-      logger.log('$login', currentUser.id);
+      $log.log('$login', currentUser.id);
       currentUser.lastLoginTimestamp = new Date().getTime();
       storage.set('user-'+currentUser.id, currentUser);
       storage.set('current-user', currentUser);
     } else {
       storage.set('current-user', null);
-      logger.log('Login Failed.');
+      $log.log('Login Failed.');
     }
     return currentUser;
   };
@@ -44,14 +44,14 @@ module.exports = function construct(config, authDriver, storage, logger, $q) {
    * @returns {*}
    */
   m.login = function(params) {
-    logger.log('Logging In...', params);
+    $log.log('Logging In...', params);
     //creds = {key: key, secret: secret};
     return authDriver.login(params)
       .then(function(user) {
         return setCurrentUser(user);
       })
       .catch(function(err) {
-        logger.logError('An error occurred attempting to login.', err);
+        $log.logError('An error occurred attempting to login.', err);
         throw err;
       });
   };
@@ -61,11 +61,11 @@ module.exports = function construct(config, authDriver, storage, logger, $q) {
       .then(function() {
         storage.remove('user-'+currentUser.id);
         storage.remove('current-user');
-        logger.log('$logout', currentUser.id);
+        $log.log('$logout', currentUser.id);
         currentUser = null;
       })
       .catch(function(err) {
-        logger.logError(err);
+        $log.logError(err);
         throw err;
       })
   };
@@ -76,7 +76,7 @@ module.exports = function construct(config, authDriver, storage, logger, $q) {
       if (user) {
         currentUser = user;
       } else {
-        logger.log('User does not exist.');
+        $log.log('User does not exist.');
       }
     } else {
       if (currentUser) return currentUser;
@@ -103,7 +103,7 @@ module.exports = function construct(config, authDriver, storage, logger, $q) {
           })
           .catch(function(err) {
             // TODO: potentially broadcast a $logout event?
-            logger.logError('Error Reauthenticating: ', err);
+            $log.logError('Error Reauthenticating: ', err);
             setCurrentUser(null);
             return null;
           });

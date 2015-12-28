@@ -11,5 +11,5 @@
 
 angular.module('win.robust-auth-client',[])
   .service('authProvider', ['config', '$http', '$q', require('./src/token-auth-provider')])
-  .service('authSvc', ['config', 'authProvider', 'storage', 'logger', '$q', require('./src/auth-svc.js')])
+  .service('authSvc', ['config', 'authProvider', 'storage', '$log', '$q', require('./src/auth-svc.js')])
 ;
